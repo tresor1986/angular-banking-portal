@@ -1,0 +1,65 @@
+<div class="home-wrapper">
+  <div class="header">
+    <div class="header-left">
+      <i class="pi pi-building" style="font-size: 1.5rem; color: white"></i>
+      <span class="header-title">Banking Portal</span>
+    </div>
+    <div class="header-right">
+      <span class="user-info">
+        <i class="pi pi-user"></i>
+        {{ currentUser?.name }} — {{ currentUser?.role | uppercase }}
+      </span>
+      <p-button
+        label="Logout"
+        icon="pi pi-sign-out"
+        severity="danger"
+        (onClick)="logout()"
+      />
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="toolbar">
+      <h2>Client List</h2>
+      <input
+        pInputText
+        [(ngModel)]="searchText"
+        (input)="onSearch()"
+        placeholder="Search by name, ID or sector..."
+        style="width: 300px"
+      />
+    </div>
+
+    <p-table
+      [value]="filteredClients"
+      stripedRows
+      [paginator]="true"
+      [rows]="5"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Company ID</th>
+          <th>Company Name</th>
+          <th>Sector</th>
+          <th>Country</th>
+          <th>Manager</th>
+          <th>Status</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-client>
+        <tr (click)="goToDetail({data: client})" style="cursor: pointer">
+          <td>{{ client.companyId }}</td>
+          <td>{{ client.companyName }}</td>
+          <td>{{ client.sector }}</td>
+          <td>{{ client.country }}</td>
+          <td>{{ client.manager }}</td>
+          <td>
+            <span [class]="'status-badge status-' + client.status">
+              {{ client.status | uppercase }}
+            </span>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
