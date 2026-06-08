@@ -1,13 +1,21 @@
 <div class="content">
   <div class="toolbar">
     <h2>Client List</h2>
-    <input
-      pInputText
-      [(ngModel)]="searchText"
-      (input)="onSearch()"
-      placeholder="Search by name, ID or sector..."
-      style="width: 300px"
-    />
+    <div class="toolbar-actions">
+      <input
+        pInputText
+        [(ngModel)]="searchText"
+        (input)="onSearch()"
+        placeholder="Search by name, ID or sector..."
+        style="width: 300px"
+      />
+      <p-button
+        *ngIf="canCreate"
+        label="New Client"
+        icon="pi pi-plus"
+        (onClick)="newClient()"
+      />
+    </div>
   </div>
 
   <p-table
@@ -24,6 +32,7 @@
         <th>Country</th>
         <th>Manager</th>
         <th>Status</th>
+        <th *ngIf="canDelete">Actions</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-client>
@@ -37,6 +46,14 @@
           <span [class]="'status-badge status-' + client.status">
             {{ client.status | uppercase }}
           </span>
+        </td>
+        <td *ngIf="canDelete" (click)="$event.stopPropagation()">
+          <p-button
+            icon="pi pi-trash"
+            severity="danger"
+            [text]="true"
+            (onClick)="deleteClient(client)"
+          />
         </td>
       </tr>
     </ng-template>

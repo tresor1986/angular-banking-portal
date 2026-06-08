@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { ClientService } from '../../services/client.service'
+import { PermissionService } from '../../services/permission.service'
 import { ClientItem, AccountItem, TransactionItem, DocumentItem, ComplianceItem } from '../../models/client.model'
 
 @Component({
@@ -20,7 +21,8 @@ export class ClientDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private clientService: ClientService
+    private clientService: ClientService,
+    private permissionService: PermissionService
   ) {}
 
   ngOnInit(): void {
@@ -30,6 +32,18 @@ export class ClientDetailComponent implements OnInit {
     this.transactions = this.clientService.getTransactions(this.accounts[0]?.id)
     this.documents = this.clientService.getDocuments(id)
     this.compliance = this.clientService.getCompliance(id)
+  }
+
+  get canViewCompliance(): boolean {
+    return this.permissionService.canViewCompliance()
+  }
+
+  get canEdit(): boolean {
+    return this.permissionService.canEditClient()
+  }
+
+  editClient(): void {
+    alert('Edit form coming soon!')
   }
 
   goBack(): void {
