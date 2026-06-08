@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core'
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { ClientItem } from '../../models/client.model'
 import { ClientService } from '../../services/client.service'
 import { PermissionService } from '../../services/permission.service'
@@ -14,12 +15,39 @@ export class HomeComponent implements OnInit {
   clients: ClientItem[] = []
   filteredClients: ClientItem[] = []
   searchText = ''
+  showDialog = false
+
+  sectorOptions = [
+    { label: 'Investment Fund', value: 'Investment Fund' },
+    { label: 'Private Banking', value: 'Private Banking' },
+    { label: 'Insurance', value: 'Insurance' },
+    { label: 'Fintech', value: 'Fintech' },
+    { label: 'Asset Management', value: 'Asset Management' },
+  ]
+
+  statusOptions = [
+    { label: 'Active', value: 'active' },
+    { label: 'Pending', value: 'pending' },
+    { label: 'Inactive', value: 'inactive' },
+  ]
+
+  clientForm: FormGroup
 
   constructor(
     private clientService: ClientService,
     private permissionService: PermissionService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private fb: FormBuilder
+  ) {
+    this.clientForm = this.fb.group({
+      companyName: ['', Validators.required],
+      companyId: ['', Validators.required],
+      sector: ['', Validators.required],
+      country: ['', Validators.required],
+      manager: ['', Validators.required],
+      status: ['active', Validators.required]
+    })
+  }
 
   ngOnInit(): void {
     this.clients = this.clientService.getClients()
@@ -42,6 +70,29 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  newClient(): void {
+    this.clientForm.reset({ status: 'active' })
+    this.showDialog = true
+  }
+
+  saveClient(): void {
+    if (this.clientForm.invalid) return
+    const newClient: ClientItem = {
+      id: this.clients.length + 1,
+      ...this.clientForm.value
+    }
+    this.clients = [...this.clients, newClient]
+    this.filteredClients = [...this.clients]
+    this.showDialog = false
+  }
+
+  deleteClient(client: ClientItem): void {
+    if (confirm(`Delete ${client.companyName}?`)) {
+      this.clients = this.clients.filter(c => c.id !== client.id)
+      this.filteredClients = this.filteredClients.filter(c => c.id !== client.id)
+    }
+  }
+
   get canCreate(): boolean {
     return this.permissionService.canCreateClient()
   }
@@ -49,17 +100,4 @@ export class HomeComponent implements OnInit {
   get canDelete(): boolean {
     return this.permissionService.canDeleteClient()
   }
-
-
-  newClient(): void {
-  // sera implémenté avec le formulaire
-  alert('New client form coming soon!')
-}
-
-deleteClient(client: ClientItem): void {
-  if (confirm(`Delete ${client.companyName}?`)) {
-    this.clients = this.clients.filter(c => c.id !== client.id)
-    this.filteredClients = this.filteredClients.filter(c => c.id !== client.id)
-  }
-}
 }

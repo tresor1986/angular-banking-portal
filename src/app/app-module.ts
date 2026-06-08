@@ -1,7 +1,7 @@
 import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
-import { FormsModule } from '@angular/forms'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { CommonModule } from '@angular/common'
 import { AppRoutingModule } from './app-routing-module'
 import { App } from './app'
@@ -21,6 +21,9 @@ import { ClientDetailComponent } from './pages/client-detail/client-detail.compo
 import { LayoutComponent } from './layout/layout.component'
 import { RouterModule } from '@angular/router'
 import { DashboardComponent } from './pages/dashboard/dashboard.component'
+import { Select } from 'primeng/select'
+import {Dialog} from 'primeng/dialog'
+
 
 @NgModule({
   declarations: [
@@ -37,6 +40,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component'
     FormsModule,
     CommonModule,
     RouterModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     Card,
     InputText,
@@ -46,7 +50,11 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component'
     TabList,
     Tab,
     TabPanels,
-    TabPanel
+    TabPanel,
+    Select,
+    Dialog,
+   
+    
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),
