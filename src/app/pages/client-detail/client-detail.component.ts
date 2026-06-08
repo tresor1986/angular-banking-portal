@@ -25,14 +25,22 @@ export class ClientDetailComponent implements OnInit {
     private permissionService: PermissionService
   ) {}
 
-  ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'))
-    this.client = this.clientService.getClientById(id)
-    this.accounts = this.clientService.getAccounts(id)
-    this.transactions = this.clientService.getTransactions(this.accounts[0]?.id)
-    this.documents = this.clientService.getDocuments(id)
-    this.compliance = this.clientService.getCompliance(id)
-  }
+ngOnInit(): void {
+  const id = Number(this.route.snapshot.paramMap.get('id'))
+  
+  this.clientService.getClientById(id).subscribe({
+    next: (client) => {
+      this.client = client
+      this.accounts = this.clientService.getAccounts(id)
+      this.transactions = this.clientService.getTransactions(this.accounts[0]?.id)
+      this.documents = this.clientService.getDocuments(id)
+      this.compliance = this.clientService.getCompliance(id)
+    },
+    error: (err) => {
+      console.error('Erreur chargement client', err)
+    }
+  })
+}
 
   get canViewCompliance(): boolean {
     return this.permissionService.canViewCompliance()

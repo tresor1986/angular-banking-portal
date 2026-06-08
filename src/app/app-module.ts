@@ -23,7 +23,7 @@ import { RouterModule } from '@angular/router'
 import { DashboardComponent } from './pages/dashboard/dashboard.component'
 import { Select } from 'primeng/select'
 import {Dialog} from 'primeng/dialog'
-
+import { provideHttpClient } from '@angular/common/http'
 
 @NgModule({
   declarations: [
@@ -59,7 +59,8 @@ import {Dialog} from 'primeng/dialog'
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideAnimationsAsync(),
-    providePrimeNG({ theme: { preset: Aura } })
+    providePrimeNG({ theme: { preset: Aura } }),
+    provideHttpClient()
   ],
   bootstrap: [App]
 })

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { ClientItem } from '../../models/client.model'
 import { ClientService } from '../../services/client.service'
@@ -37,7 +37,8 @@ export class HomeComponent implements OnInit {
     private clientService: ClientService,
     private permissionService: PermissionService,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+     private cdr: ChangeDetectorRef
   ) {
     this.clientForm = this.fb.group({
       companyName: ['', Validators.required],
@@ -49,10 +50,18 @@ export class HomeComponent implements OnInit {
     })
   }
 
-  ngOnInit(): void {
-    this.clients = this.clientService.getClients()
-    this.filteredClients = [...this.clients]
-  }
+ngOnInit(): void {
+  this.clientService.getClients().subscribe({
+    next: (clients) => {
+      this.clients = clients
+      this.filteredClients = [...clients]
+      this.cdr.detectChanges()
+    },
+    error: (err) => {
+      console.error('Erreur chargement clients', err)
+    }
+  })
+}
 
   onSearch(): void {
     const term = this.searchText.toLowerCase()
@@ -75,23 +84,37 @@ export class HomeComponent implements OnInit {
     this.showDialog = true
   }
 
-  saveClient(): void {
-    if (this.clientForm.invalid) return
-    const newClient: ClientItem = {
-      id: this.clients.length + 1,
-      ...this.clientForm.value
-    }
-    this.clients = [...this.clients, newClient]
-    this.filteredClients = [...this.clients]
-    this.showDialog = false
+saveClient(): void {
+  if (this.clientForm.invalid) return
+  const newClient: ClientItem = {
+    id: 0,
+    ...this.clientForm.value
   }
+  this.clientService.addClient(newClient).subscribe({
+    next: (created) => {
+      this.clients = [...this.clients, created]
+      this.filteredClients = [...this.clients]
+      this.showDialog = false
+    },
+    error: (err) => {
+      console.error('Erreur création client', err)
+    }
+  })
+}
 
-  deleteClient(client: ClientItem): void {
-    if (confirm(`Delete ${client.companyName}?`)) {
-      this.clients = this.clients.filter(c => c.id !== client.id)
-      this.filteredClients = this.filteredClients.filter(c => c.id !== client.id)
-    }
+deleteClient(client: ClientItem): void {
+  if (confirm(`Delete ${client.companyName}?`)) {
+    this.clientService.deleteClient(client.id).subscribe({
+      next: () => {
+        this.clients = this.clients.filter(c => c.id !== client.id)
+        this.filteredClients = this.filteredClients.filter(c => c.id !== client.id)
+      },
+      error: (err) => {
+        console.error('Erreur suppression client', err)
+      }
+    })
   }
+}
 
   get canCreate(): boolean {
     return this.permissionService.canCreateClient()

@@ -25,18 +25,21 @@ export class DashboardComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    this.clients = this.clientService.getClients()
-
-    // Calcul des statistiques — comme ton selectCallback en Angular
-    this.stats.total = this.clients.length
-    this.stats.active = this.clients.filter(c => c.status === 'active').length
-    this.stats.pending = this.clients.filter(c => c.status === 'pending').length
-    this.stats.inactive = this.clients.filter(c => c.status === 'inactive').length
-
-    // 3 derniers clients
-    this.recentClients = this.clients.slice(0, 3)
-  }
+ ngOnInit(): void {
+  this.clientService.getClients().subscribe({
+    next: (clients) => {
+      this.clients = clients
+      this.stats.total = clients.length
+      this.stats.active = clients.filter(c => c.status === 'active').length
+      this.stats.pending = clients.filter(c => c.status === 'pending').length
+      this.stats.inactive = clients.filter(c => c.status === 'inactive').length
+      this.recentClients = clients.slice(0, 3)
+    },
+    error: (err) => {
+      console.error('Erreur chargement clients', err)
+    }
+  })
+}
 
   goToClient(id: number): void {
     this.router.navigate(['/client', id])

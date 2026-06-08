@@ -1,28 +1,47 @@
 import { Injectable } from '@angular/core'
+import { HttpClient } from '@angular/common/http'
+import { Observable, map } from 'rxjs'
 import { ClientItem, AccountItem, TransactionItem, DocumentItem, ComplianceItem } from '../models/client.model'
+
+interface ApiResponse<T> {
+  success: boolean
+  message: string
+  data: T
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClientService {
+  private apiUrl = 'https://localhost:7281/api/client'
 
-  private clients: ClientItem[] = [
-    { id: 1, companyName: 'Alpha Investments S.A.', companyId: 'LU123456', sector: 'Investment Fund', country: 'Luxembourg', status: 'active', manager: 'Jean Müller' },
-    { id: 2, companyName: 'Beta Capital Group', companyId: 'LU234567', sector: 'Private Banking', country: 'Luxembourg', status: 'active', manager: 'Sophie Weber' },
-    { id: 3, companyName: 'Gamma Insurance Ltd', companyId: 'LU345678', sector: 'Insurance', country: 'Belgium', status: 'pending', manager: 'Marc Dupont' },
-    { id: 4, companyName: 'Delta Fintech S.A.', companyId: 'LU456789', sector: 'Fintech', country: 'Luxembourg', status: 'active', manager: 'Anna Schmidt' },
-    { id: 5, companyName: 'Epsilon Holdings', companyId: 'LU567890', sector: 'Investment Fund', country: 'Germany', status: 'inactive', manager: 'Pierre Martin' },
-    { id: 6, companyName: 'Zeta Asset Management', companyId: 'LU678901', sector: 'Asset Management', country: 'Luxembourg', status: 'active', manager: 'Jean Müller' },
-  ]
+  constructor(private http: HttpClient) {}
 
-  getClients(): ClientItem[] {
-    return this.clients
+  getClients(): Observable<ClientItem[]> {
+    return this.http.get<ApiResponse<ClientItem[]>>(this.apiUrl).pipe(
+      map(response => response.data)
+    )
   }
 
-  getClientById(id: number): ClientItem | undefined {
-    return this.clients.find(c => c.id === id)
+  getClientById(id: number): Observable<ClientItem> {
+    return this.http.get<ApiResponse<ClientItem>>(`${this.apiUrl}/${id}`).pipe(
+      map(response => response.data)
+    )
   }
 
+  addClient(client: ClientItem): Observable<ClientItem> {
+    return this.http.post<ApiResponse<ClientItem>>(this.apiUrl, client).pipe(
+      map(response => response.data)
+    )
+  }
+
+  deleteClient(id: number): Observable<boolean> {
+    return this.http.delete<ApiResponse<boolean>>(`${this.apiUrl}/${id}`).pipe(
+      map(response => response.data)
+    )
+  }
+
+  // Ces méthodes restent en mock pour l'instant
   getAccounts(clientId: number): AccountItem[] {
     return [
       { id: 1, clientId, accountNumber: 'LU28 0019 4006 4475 0000', type: 'current', balance: 125000, currency: 'EUR', openDate: '2020-01-15' },
