@@ -1,0 +1,46 @@
+<div class="layout-wrapper">
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="menu-toggle" (click)="sidebarVisible = !sidebarVisible">
+        <i class="pi pi-bars"></i>
+      </button>
+      <i class="pi pi-building" style="font-size: 1.3rem"></i>
+      <span class="app-title">Banking Portal</span>
+    </div>
+    <div class="topbar-right">
+      <div class="user-info">
+        <i class="pi pi-user"></i>
+        <span>{{ currentUser?.name }}</span>
+        <span class="role-badge">{{ currentUser?.role | uppercase }}</span>
+      </div>
+      <button class="logout-btn" (click)="logout()">
+        <i class="pi pi-sign-out"></i>
+        Logout
+      </button>
+    </div>
+  </div>
+
+  <div class="layout-body">
+
+    <div class="sidebar" [class.collapsed]="!sidebarVisible">
+      <div class="sidebar-menu">
+        <div
+          *ngFor="let item of menuItems"
+          class="menu-item"
+          [class.active]="isActive(item.route)"
+          (click)="navigate(item.route)"
+        >
+          <i [class]="item.icon"></i>
+          <span class="menu-label">{{ item.label }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <router-outlet />
+    </div>
+
+  </div>
+
+</div>

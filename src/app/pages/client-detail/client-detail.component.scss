@@ -1,36 +1,28 @@
-.detail-wrapper {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+.detail-content {
+  padding: 2rem;
 }
 
-.header {
-  background: #1976d2;
-  color: white;
-  padding: 0.75rem 2rem;
+.detail-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 
-  .header-left {
+  .client-title {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 12px;
 
-    .header-title {
-      font-size: 1.2rem;
-      font-weight: 600;
+    h2 {
+      margin: 0;
+      font-size: 1.3rem;
+    }
+
+    .company-id {
+      font-size: 13px;
+      color: #666;
     }
   }
-
-  .company-id {
-    font-size: 14px;
-    opacity: 0.8;
-  }
-}
-
-.content {
-  padding: 2rem;
 }
 
 .client-info {
@@ -67,19 +59,19 @@
   border-radius: 20px;
   font-size: 12px;
   font-weight: 600;
+}
 
-  &.status-active {
-    background: #e8f5e9;
-    color: #2e7d32;
-  }
+.status-active {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
 
-  &.status-inactive {
-    background: #ffebee;
-    color: #c62828;
-  }
+.status-inactive {
+  background: #ffebee;
+  color: #c62828;
+}
 
-  &.status-pending {
-    background: #fff8e1;
-    color: #f57f17;
-  }
+.status-pending {
+  background: #fff8e1;
+  color: #f57f17;
 }

@@ -1,14 +1,16 @@
-<div class="detail-wrapper">
-  <div class="header">
-    <div class="header-left">
-      <p-button icon="pi pi-arrow-left" severity="secondary" (onClick)="goBack()" />
-      <i class="pi pi-building" style="font-size: 1.5rem; color: white"></i>
-      <span class="header-title">{{ client?.companyName }}</span>
+<div class="detail-content">
+  <div class="detail-header">
+    <p-button icon="pi pi-arrow-left" severity="secondary" (onClick)="goBack()" />
+    <div class="client-title">
+      <i class="pi pi-building" style="font-size: 1.3rem; color: #1976d2"></i>
+      <div>
+        <h2>{{ client?.companyName }}</h2>
+        <span class="company-id">{{ client?.companyId }}</span>
+      </div>
     </div>
-    <span class="company-id">{{ client?.companyId }}</span>
   </div>
 
-  <div class="content" *ngIf="client">
+  <div *ngIf="client">
     <div class="client-info">
       <div class="info-card">
         <span class="info-label">Sector</span>
@@ -39,7 +41,6 @@
       </p-tablist>
 
       <p-tabpanels>
-
         <p-tabpanel value="0">
           <p-table [value]="accounts" stripedRows>
             <ng-template pTemplate="header">
@@ -139,7 +140,6 @@
             </ng-template>
           </p-table>
         </p-tabpanel>
-
       </p-tabpanels>
     </p-tabs>
   </div>

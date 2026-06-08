@@ -1,0 +1,85 @@
+<div class="dashboard-content">
+
+  <div class="page-header">
+    <h2>Dashboard</h2>
+    <span class="subtitle">Welcome back, Banking Portal overview</span>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card total">
+      <div class="stat-icon">
+        <i class="pi pi-users"></i>
+      </div>
+      <div class="stat-info">
+        <span class="stat-value">{{ stats.total }}</span>
+        <span class="stat-label">Total Clients</span>
+      </div>
+    </div>
+
+    <div class="stat-card active">
+      <div class="stat-icon">
+        <i class="pi pi-check-circle"></i>
+      </div>
+      <div class="stat-info">
+        <span class="stat-value">{{ stats.active }}</span>
+        <span class="stat-label">Active</span>
+      </div>
+    </div>
+
+    <div class="stat-card pending">
+      <div class="stat-icon">
+        <i class="pi pi-clock"></i>
+      </div>
+      <div class="stat-info">
+        <span class="stat-value">{{ stats.pending }}</span>
+        <span class="stat-label">Pending</span>
+      </div>
+    </div>
+
+    <div class="stat-card inactive">
+      <div class="stat-icon">
+        <i class="pi pi-times-circle"></i>
+      </div>
+      <div class="stat-info">
+        <span class="stat-value">{{ stats.inactive }}</span>
+        <span class="stat-label">Inactive</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="recent-section">
+    <div class="section-header">
+      <h3>Recent Clients</h3>
+      <button class="view-all-btn" (click)="goToClients()">
+        View all <i class="pi pi-arrow-right"></i>
+      </button>
+    </div>
+
+    <div class="recent-cards">
+      <div
+        *ngFor="let client of recentClients"
+        class="client-card"
+        (click)="goToClient(client.id)"
+      >
+        <div class="client-card-header">
+          <div class="client-avatar">
+            {{ client.companyName.charAt(0) }}
+          </div>
+          <div class="client-info">
+            <span class="client-name">{{ client.companyName }}</span>
+            <span class="client-id">{{ client.companyId }}</span>
+          </div>
+          <span [class]="'status-badge status-' + client.status">
+            {{ client.status | uppercase }}
+          </span>
+        </div>
+        <div class="client-card-footer">
+          <span><i class="pi pi-briefcase"></i> {{ client.sector }}</span>
+          <span><i class="pi pi-map-marker"></i> {{ client.country }}</span>
+          <span><i class="pi pi-user"></i> {{ client.manager }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

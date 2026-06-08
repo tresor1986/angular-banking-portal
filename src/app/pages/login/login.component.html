@@ -1,12 +1,10 @@
 <div class="login-wrapper">
-  <p-card>
-    <ng-template pTemplate="header">
-      <div class="login-header">
-        <i class="pi pi-building" style="font-size: 2rem; color: #1976d2"></i>
-        <h2>Banking Portal</h2>
-        <p>Sign in to your account</p>
-      </div>
-    </ng-template>
+  <div class="login-card">
+    <div class="login-header">
+      <i class="pi pi-building" style="font-size: 2rem; color: #1976d2"></i>
+      <h2>Banking Portal</h2>
+      <p>Sign in to your account</p>
+    </div>
 
     <div class="field">
       <label>Email</label>
@@ -22,8 +20,6 @@
 
     <p-button label="Sign In" icon="pi pi-sign-in" (onClick)="login()" styleClass="w-full" />
 
-    <ng-template pTemplate="footer">
-      <small>Demo: admin@bank.lu / 1234</small>
-    </ng-template>
-  </p-card>
+    <small class="demo-hint">Demo: admin@bank.lu / 1234</small>
+  </div>
 </div>

@@ -18,19 +18,25 @@ import { Tabs, TabList, Tab, TabPanels, TabPanel } from 'primeng/tabs'
 import { LoginComponent } from './pages/login/login.component'
 import { HomeComponent } from './pages/home/home.component'
 import { ClientDetailComponent } from './pages/client-detail/client-detail.component'
+import { LayoutComponent } from './layout/layout.component'
+import { RouterModule } from '@angular/router'
+import { DashboardComponent } from './pages/dashboard/dashboard.component'
 
 @NgModule({
   declarations: [
     App,
     LoginComponent,
     HomeComponent,
-    ClientDetailComponent
+    ClientDetailComponent,
+    LayoutComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
     CommonModule,
+    RouterModule,
     AppRoutingModule,
     Card,
     InputText,
