@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core'
+import { HttpClient } from '@angular/common/http'
 import { Router } from '@angular/router'
+import { Observable, tap } from 'rxjs'
 
 export interface UserProfile {
   email: string
@@ -7,30 +9,41 @@ export interface UserProfile {
   name: string
 }
 
-const MOCK_USERS: UserProfile[] = [
-  { email: 'admin@bank.lu', role: 'admin', name: 'Admin User' },
-  { email: 'manager@bank.lu', role: 'manager', name: 'Jean Müller' },
-  { email: 'compliance@bank.lu', role: 'compliance', name: 'Marie Hoffmann' },
-  { email: 'readonly@bank.lu', role: 'readonly', name: 'Guest User' },
-]
+interface AuthResponse {
+  token: string
+  user: UserProfile
+}
+
+interface ApiResponse<T> {
+  success: boolean
+  message: string
+  data: T
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private apiUrl = 'https://localhost:7281/api/auth'
 
-  constructor(private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {}
 
-  login(email: string, password: string): boolean {
-    const user = MOCK_USERS.find(u => u.email === email)
-    if (user && password === '1234') {
-      localStorage.setItem('user', JSON.stringify(user))
-      return true
-    }
-    return false
+  login(email: string, password: string): Observable<ApiResponse<AuthResponse>> {
+    return this.http.post<ApiResponse<AuthResponse>>(`${this.apiUrl}/login`, { email, password }).pipe(
+      tap(response => {
+        if (response.success) {
+          localStorage.setItem('token', response.data.token)
+          localStorage.setItem('user', JSON.stringify(response.data.user))
+        }
+      })
+    )
   }
 
   logout(): void {
+    localStorage.removeItem('token')
     localStorage.removeItem('user')
     this.router.navigate(['/login'])
   }
@@ -38,6 +51,14 @@ export class AuthService {
   getCurrentUser(): UserProfile | null {
     const user = localStorage.getItem('user')
     return user ? JSON.parse(user) : null
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('token')
+  }
+
+  isLoggedIn(): boolean {
+    return localStorage.getItem('token') !== null
   }
 
   isAdmin(): boolean {

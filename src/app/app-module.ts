@@ -23,7 +23,8 @@ import { RouterModule } from '@angular/router'
 import { DashboardComponent } from './pages/dashboard/dashboard.component'
 import { Select } from 'primeng/select'
 import {Dialog} from 'primeng/dialog'
-import { provideHttpClient } from '@angular/common/http'
+import { provideHttpClient, withInterceptors } from '@angular/common/http'
+import { authInterceptor } from './interceptors/auth.interceptor'
 
 @NgModule({
   declarations: [
@@ -60,8 +61,7 @@ import { provideHttpClient } from '@angular/common/http'
     provideBrowserGlobalErrorListeners(),
     provideAnimationsAsync(),
     providePrimeNG({ theme: { preset: Aura } }),
-    provideHttpClient()
-  ],
+provideHttpClient(withInterceptors([authInterceptor]))  ],
   bootstrap: [App]
 })
 export class AppModule {}

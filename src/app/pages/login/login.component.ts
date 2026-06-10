@@ -12,6 +12,7 @@ export class LoginComponent {
   email = ''
   password = ''
   error = ''
+  loading = false
 
   constructor(
     private authService: AuthService,
@@ -23,11 +24,23 @@ export class LoginComponent {
       this.error = 'Please fill in all fields'
       return
     }
-    const success = this.authService.login(this.email, this.password)
-    if (success) {
-      this.router.navigate(['/home'])
-    } else {
-      this.error = 'Invalid email or password'
-    }
+
+    this.loading = true
+    this.error = ''
+
+    this.authService.login(this.email, this.password).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.router.navigate(['/dashboard'])
+        } else {
+          this.error = 'Invalid email or password'
+          this.loading = false
+        }
+      },
+      error: () => {
+        this.error = 'Invalid email or password'
+        this.loading = false
+      }
+    })
   }
 }
