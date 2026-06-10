@@ -19,10 +19,14 @@
   </div>
 
   <p-table
-    [value]="filteredClients"
+    [value]="clients"
+    [loading]="loading"
     stripedRows
     [paginator]="true"
-    [rows]="5"
+    [rows]="pageSize"
+    [totalRecords]="totalRecords"
+    [lazy]="true"
+    (onLazyLoad)="onPageChange($event)"
   >
     <ng-template pTemplate="header">
       <tr>
@@ -68,7 +72,6 @@
   [draggable]="false"
 >
   <form [formGroup]="clientForm">
-
     <div class="field">
       <label>Company Name *</label>
       <input pInputText formControlName="companyName" style="width: 100%" />
@@ -76,15 +79,10 @@
         Company Name is required
       </small>
     </div>
-
     <div class="field">
       <label>Company ID *</label>
       <input pInputText formControlName="companyId" style="width: 100%" />
-      <small *ngIf="clientForm.get('companyId')?.invalid && clientForm.get('companyId')?.touched" class="error">
-        Company ID is required
-      </small>
     </div>
-
     <div class="field">
       <label>Sector *</label>
       <p-select
@@ -96,17 +94,14 @@
         style="width: 100%"
       />
     </div>
-
     <div class="field">
       <label>Country *</label>
       <input pInputText formControlName="country" style="width: 100%" />
     </div>
-
     <div class="field">
       <label>Manager *</label>
       <input pInputText formControlName="manager" style="width: 100%" />
     </div>
-
     <div class="field">
       <label>Status *</label>
       <p-select
@@ -117,7 +112,6 @@
         style="width: 100%"
       />
     </div>
-
   </form>
 
   <ng-template pTemplate="footer">

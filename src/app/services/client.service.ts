@@ -73,4 +73,11 @@ export class ClientService {
       { id: 3, clientId, checkType: 'Sanctions List', result: 'passed', date: '2026-03-15', officer: 'Tom Wagner' },
     ]
   }
+
+  getClientsPaginated(page: number, pageSize: number, search: string = ''): Observable<any> {
+  const params = `?page=${page}&pageSize=${pageSize}&search=${search}`
+  return this.http.get<any>(`${this.apiUrl}/paginated${params}`).pipe(
+    map(response => response.data)
+  )
+}
 }

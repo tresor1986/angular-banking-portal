@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core'
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { ClientItem } from '../../models/client.model'
 import { ClientService } from '../../services/client.service'
@@ -16,6 +16,12 @@ export class HomeComponent implements OnInit {
   filteredClients: ClientItem[] = []
   searchText = ''
   showDialog = false
+  loading = false
+
+  // Pagination serveur
+  totalRecords = 0
+  pageSize = 5
+  currentPage = 1
 
   sectorOptions = [
     { label: 'Investment Fund', value: 'Investment Fund' },
@@ -38,7 +44,7 @@ export class HomeComponent implements OnInit {
     private permissionService: PermissionService,
     private router: Router,
     private fb: FormBuilder,
-     private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef
   ) {
     this.clientForm = this.fb.group({
       companyName: ['', Validators.required],
@@ -50,27 +56,37 @@ export class HomeComponent implements OnInit {
     })
   }
 
-ngOnInit(): void {
-  this.clientService.getClients().subscribe({
-    next: (clients) => {
-      this.clients = clients
-      this.filteredClients = [...clients]
+  ngOnInit(): void {
+    this.loadClients()
+  }
+
+loadClients(): void {
+  this.loading = true
+  this.clientService.getClientsPaginated(this.currentPage, this.pageSize, this.searchText).subscribe({
+    next: (result) => {
+      this.clients = result.items
+      this.filteredClients = result.items
+      this.totalRecords = result.totalCount
+      this.loading = false
       this.cdr.detectChanges()
     },
     error: (err) => {
       console.error('Erreur chargement clients', err)
+      this.loading = false
+      this.cdr.detectChanges()
     }
   })
 }
-
   onSearch(): void {
-    const term = this.searchText.toLowerCase()
-    this.filteredClients = this.clients.filter(c =>
-      c.companyName.toLowerCase().includes(term) ||
-      c.companyId.toLowerCase().includes(term) ||
-      c.sector.toLowerCase().includes(term)
-    )
+    this.currentPage = 1
+    this.loadClients()
   }
+
+onPageChange(event: any): void {
+  this.currentPage = event.first / event.rows + 1
+  this.pageSize = event.rows
+  this.loadClients()
+}
 
   goToDetail(event: any): void {
     const client = event.data
@@ -84,37 +100,35 @@ ngOnInit(): void {
     this.showDialog = true
   }
 
-saveClient(): void {
-  if (this.clientForm.invalid) return
-  const newClient: ClientItem = {
-    id: 0,
-    ...this.clientForm.value
-  }
-  this.clientService.addClient(newClient).subscribe({
-    next: (created) => {
-      this.clients = [...this.clients, created]
-      this.filteredClients = [...this.clients]
-      this.showDialog = false
-    },
-    error: (err) => {
-      console.error('Erreur création client', err)
+  saveClient(): void {
+    if (this.clientForm.invalid) return
+    const newClient: ClientItem = {
+      id: 0,
+      ...this.clientForm.value
     }
-  })
-}
-
-deleteClient(client: ClientItem): void {
-  if (confirm(`Delete ${client.companyName}?`)) {
-    this.clientService.deleteClient(client.id).subscribe({
+    this.clientService.addClient(newClient).subscribe({
       next: () => {
-        this.clients = this.clients.filter(c => c.id !== client.id)
-        this.filteredClients = this.filteredClients.filter(c => c.id !== client.id)
+        this.loadClients()
+        this.showDialog = false
       },
       error: (err) => {
-        console.error('Erreur suppression client', err)
+        console.error('Erreur création client', err)
       }
     })
   }
-}
+
+  deleteClient(client: ClientItem): void {
+    if (confirm(`Delete ${client.companyName}?`)) {
+      this.clientService.deleteClient(client.id).subscribe({
+        next: () => {
+          this.loadClients()
+        },
+        error: (err) => {
+          console.error('Erreur suppression client', err)
+        }
+      })
+    }
+  }
 
   get canCreate(): boolean {
     return this.permissionService.canCreateClient()
