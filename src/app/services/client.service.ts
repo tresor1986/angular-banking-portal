@@ -15,7 +15,7 @@ interface ApiResponse<T> {
 export class ClientService {
   private apiUrl = 'https://localhost:7281/api/client'
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getClients(): Observable<ClientItem[]> {
     return this.http.get<ApiResponse<ClientItem[]>>(this.apiUrl).pipe(
@@ -75,9 +75,15 @@ export class ClientService {
   }
 
   getClientsPaginated(page: number, pageSize: number, search: string = ''): Observable<any> {
-  const params = `?page=${page}&pageSize=${pageSize}&search=${search}`
-  return this.http.get<any>(`${this.apiUrl}/paginated${params}`).pipe(
-    map(response => response.data)
-  )
-}
+    const params = `?page=${page}&pageSize=${pageSize}&search=${search}`
+    return this.http.get<any>(`${this.apiUrl}/paginated${params}`).pipe(
+      map(response => response.data)
+    )
+  }
+
+  updateClient(id: number, client: ClientItem): Observable<ClientItem> {
+    return this.http.put<ApiResponse<ClientItem>>(`${this.apiUrl}/${id}`, client).pipe(
+      map(response => response.data)
+    )
+  }
 }

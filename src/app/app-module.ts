@@ -25,6 +25,8 @@ import { Select } from 'primeng/select'
 import {Dialog} from 'primeng/dialog'
 import { provideHttpClient, withInterceptors } from '@angular/common/http'
 import { authInterceptor } from './interceptors/auth.interceptor'
+import {ToastModule} from 'primeng/toast'
+import {MessageService} from 'primeng/api'
 
 @NgModule({
   declarations: [
@@ -43,6 +45,7 @@ import { authInterceptor } from './interceptors/auth.interceptor'
     RouterModule,
     ReactiveFormsModule,
     AppRoutingModule,
+    ToastModule,
     Card,
     InputText,
     Button,
@@ -61,7 +64,10 @@ import { authInterceptor } from './interceptors/auth.interceptor'
     provideBrowserGlobalErrorListeners(),
     provideAnimationsAsync(),
     providePrimeNG({ theme: { preset: Aura } }),
-provideHttpClient(withInterceptors([authInterceptor]))  ],
+provideHttpClient(withInterceptors([authInterceptor])) ,
+MessageService
+ ],
+  
   bootstrap: [App]
 })
 export class AppModule {}

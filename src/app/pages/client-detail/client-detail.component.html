@@ -151,3 +151,64 @@
     </p-tabs>
   </div>
 </div>
+
+<p-dialog
+  header="Edit Client"
+  [(visible)]="showEditDialog"
+  [modal]="true"
+  [style]="{ width: '500px' }"
+  [draggable]="false"
+>
+  <form [formGroup]="editForm">
+    <div class="field">
+      <label>Company Name *</label>
+      <input pInputText formControlName="companyName" style="width: 100%" />
+    </div>
+    <div class="field">
+      <label>Company ID *</label>
+      <input pInputText formControlName="companyId" style="width: 100%" />
+    </div>
+    <div class="field">
+      <label>Sector *</label>
+      <p-select
+        formControlName="sector"
+        [options]="sectorOptions"
+        optionLabel="label"
+        optionValue="value"
+        style="width: 100%"
+      />
+    </div>
+    <div class="field">
+      <label>Country *</label>
+      <input pInputText formControlName="country" style="width: 100%" />
+    </div>
+    <div class="field">
+      <label>Manager *</label>
+      <input pInputText formControlName="manager" style="width: 100%" />
+    </div>
+    <div class="field">
+      <label>Status *</label>
+      <p-select
+        formControlName="status"
+        [options]="statusOptions"
+        optionLabel="label"
+        optionValue="value"
+        style="width: 100%"
+      />
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      label="Cancel"
+      severity="secondary"
+      (onClick)="showEditDialog = false"
+    />
+    <p-button
+      label="Save"
+      icon="pi pi-check"
+      (onClick)="saveEdit()"
+      [disabled]="editForm.invalid"
+    />
+  </ng-template>
+</p-dialog>

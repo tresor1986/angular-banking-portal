@@ -4,6 +4,7 @@ import { ClientItem } from '../../models/client.model'
 import { ClientService } from '../../services/client.service'
 import { PermissionService } from '../../services/permission.service'
 import { Router } from '@angular/router'
+import { MessageService } from 'primeng/api'
 
 @Component({
   selector: 'app-home',
@@ -44,7 +45,8 @@ export class HomeComponent implements OnInit {
     private permissionService: PermissionService,
     private router: Router,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private messageService: MessageService
   ) {
     this.clientForm = this.fb.group({
       companyName: ['', Validators.required],
@@ -100,35 +102,53 @@ onPageChange(event: any): void {
     this.showDialog = true
   }
 
-  saveClient(): void {
-    if (this.clientForm.invalid) return
-    const newClient: ClientItem = {
-      id: 0,
-      ...this.clientForm.value
+saveClient(): void {
+  if (this.clientForm.invalid) return
+  const newClient: ClientItem = {
+    id: 0,
+    ...this.clientForm.value
+  }
+  this.clientService.addClient(newClient).subscribe({
+    next: () => {
+      this.loadClients()
+      this.showDialog = false
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Success',
+        detail: 'Client created successfully'
+      })
+    },
+    error: () => {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Failed to create client'
+      })
     }
-    this.clientService.addClient(newClient).subscribe({
+  })
+}
+
+deleteClient(client: ClientItem): void {
+  if (confirm(`Delete ${client.companyName}?`)) {
+    this.clientService.deleteClient(client.id).subscribe({
       next: () => {
         this.loadClients()
-        this.showDialog = false
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: `${client.companyName} deleted successfully`
+        })
       },
-      error: (err) => {
-        console.error('Erreur création client', err)
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to delete client'
+        })
       }
     })
   }
-
-  deleteClient(client: ClientItem): void {
-    if (confirm(`Delete ${client.companyName}?`)) {
-      this.clientService.deleteClient(client.id).subscribe({
-        next: () => {
-          this.loadClients()
-        },
-        error: (err) => {
-          console.error('Erreur suppression client', err)
-        }
-      })
-    }
-  }
+}
 
   get canCreate(): boolean {
     return this.permissionService.canCreateClient()
