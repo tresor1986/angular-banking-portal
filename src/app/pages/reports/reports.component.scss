@@ -1,0 +1,40 @@
+.reports-content {
+  padding: 2rem;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+
+  h2 {
+    margin: 0 0 4px;
+    font-size: 1.5rem;
+    color: #1a2332;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: #666;
+  }
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.chart-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border: 0.5px solid #e0e0e0;
+
+  h3 {
+    margin: 0 0 1rem;
+    font-size: 1rem;
+    color: #1a2332;
+    font-weight: 500;
+  }
+}

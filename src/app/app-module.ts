@@ -27,6 +27,8 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http'
 import { authInterceptor } from './interceptors/auth.interceptor'
 import {ToastModule} from 'primeng/toast'
 import {MessageService} from 'primeng/api'
+import {ChartModule} from 'primeng/chart'
+import { ReportsComponent } from './pages/reports/reports.component'
 
 @NgModule({
   declarations: [
@@ -35,7 +37,8 @@ import {MessageService} from 'primeng/api'
     HomeComponent,
     ClientDetailComponent,
     LayoutComponent,
-    DashboardComponent
+    DashboardComponent,
+    ReportsComponent
   ],
   imports: [
     BrowserModule,
@@ -46,6 +49,7 @@ import {MessageService} from 'primeng/api'
     ReactiveFormsModule,
     AppRoutingModule,
     ToastModule,
+    ChartModule,
     Card,
     InputText,
     Button,
