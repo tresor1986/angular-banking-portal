@@ -29,6 +29,7 @@ import {ToastModule} from 'primeng/toast'
 import {MessageService} from 'primeng/api'
 import {ChartModule} from 'primeng/chart'
 import { ReportsComponent } from './pages/reports/reports.component'
+import { SettingsComponent } from './pages/settings/settings.component'
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { ReportsComponent } from './pages/reports/reports.component'
     ClientDetailComponent,
     LayoutComponent,
     DashboardComponent,
-    ReportsComponent
+    ReportsComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,

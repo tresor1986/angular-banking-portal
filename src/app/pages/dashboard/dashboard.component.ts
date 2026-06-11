@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core'
 import { ClientService } from '../../services/client.service'
 import { ClientItem } from '../../models/client.model'
 import { Router } from '@angular/router'
@@ -22,23 +22,27 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private clientService: ClientService,
+    private cdr: ChangeDetectorRef,
     private router: Router
   ) {}
 
- ngOnInit(): void {
-  this.clientService.getClients().subscribe({
-    next: (clients) => {
-      this.clients = clients
-      this.stats.total = clients.length
-      this.stats.active = clients.filter(c => c.status === 'active').length
-      this.stats.pending = clients.filter(c => c.status === 'pending').length
-      this.stats.inactive = clients.filter(c => c.status === 'inactive').length
-      this.recentClients = clients.slice(0, 3)
-    },
-    error: (err) => {
-      console.error('Erreur chargement clients', err)
-    }
-  })
+ngOnInit(): void {
+  setTimeout(() => {
+    this.clientService.getClients().subscribe({
+      next: (clients) => {
+        this.clients = clients
+        this.stats.total = clients.length
+        this.stats.active = clients.filter(c => c.status === 'active').length
+        this.stats.pending = clients.filter(c => c.status === 'pending').length
+        this.stats.inactive = clients.filter(c => c.status === 'inactive').length
+        this.recentClients = clients.slice(0, 3)
+        this.cdr.detectChanges()
+      },
+      error: (err) => {
+        console.error('Erreur chargement clients', err)
+      }
+    })
+  }, 100)
 }
 
   goToClient(id: number): void {

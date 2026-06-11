@@ -7,6 +7,7 @@ import { LayoutComponent } from './layout/layout.component'
 import { AuthGuard } from './guards/auth.guard'
 import { DashboardComponent } from './pages/dashboard/dashboard.component'
 import { ReportsComponent } from './pages/reports/reports.component'
+import { SettingsComponent } from './pages/settings/settings.component'
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -19,6 +20,7 @@ const routes: Routes = [
       { path: 'home', component: HomeComponent },
       { path: 'client/:id', component: ClientDetailComponent },
       { path: 'reports', component: ReportsComponent },
+      { path: 'settings', component: SettingsComponent },
       { path: '', redirectTo: 'home', pathMatch: 'full' }
     ]
   },
